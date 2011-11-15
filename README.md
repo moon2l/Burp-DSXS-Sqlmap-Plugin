@@ -1,7 +1,8 @@
 DSXS Integration for Burp
 =========================
 
-DSXS from Here: [DSXS GitHub](https://github.com/stamparm/DSXS)
+- [DSXS (Damn Small XSS Scanner)](https://github.com/stamparm/DSXS)
+- [Sqlmap](http://sqlmap.sourceforge.net/#download)
 
 Installation
 ------------------------
@@ -11,4 +12,4 @@ Installation
 3. launch burp with the plugin jar in the classpath
 
 
-![Example usage of Plugin](https://raw.github.com/arirubinstein/BurpDSXSIntegrationPlugin/master/doc/burpdropdown.png "Example usage of Plugin")
+![Example usage of Plugin](https://raw.github.com/arirubinstein/Burp-DSXS-Sqlmap-Plugin/master/doc/burpdropdown.png "Example usage of Plugin")
