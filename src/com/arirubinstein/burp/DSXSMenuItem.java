@@ -17,9 +17,9 @@ import java.util.regex.*;
 import burp.*;
 
 public class DSXSMenuItem implements IMenuItemHandler {
-    private String getBody(String s){
+    private String runRegex(String p, String s){
         try {
-            Pattern regex = Pattern.compile("^.\n(.*)", Pattern.DOTALL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.MULTILINE);
+            Pattern regex = Pattern.compile(p, Pattern.DOTALL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.MULTILINE);
             Matcher regexMatcher = regex.matcher(s);
             while (regexMatcher.find()) {
                 return regexMatcher.group(1);
@@ -28,27 +28,26 @@ public class DSXSMenuItem implements IMenuItemHandler {
             return null;
         }
         return null;
+	}
+	private String getBody(String s){
+        return runRegex("^.\n(.*)", s);
     }
     private String getHeader(String h, String s){
-        try {
-        Pattern regex = Pattern.compile("^"+h+": (.+?)$", Pattern.DOTALL | Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.MULTILINE);
-            Matcher regexMatcher = regex.matcher(s);
-            while (regexMatcher.find()) {
-                return regexMatcher.group(1).toString();
-            } 
-        } catch (PatternSyntaxException ex) {
-            return null;
-        }
-        return null;
-
+        return runRegex("^"+h+": (.+?)$", s);
     }
     private void setClip(String s){
         StringSelection stringSelection = new StringSelection(s);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
     }
+    /*
+     * Crude escaping for commandline
+     */
     private String cmdEscape(String s){
         return s.replace("!", "\\!").replace("\"", "\\\"");
     }
+    /*
+     * Changes cookie args that upset the sqlmap scanner
+     */
     private String stripForSqlMap(String s){
         return s.replace("(","").replace(")","").replace("'","");
     }
@@ -72,8 +71,7 @@ public class DSXSMenuItem implements IMenuItemHandler {
                         System.out.println("Is Other");
                     }
 
-                    StringBuffer cmdString = new StringBuffer("");
-                    cmdString.append(" -u \""+cmdEscape(url)+"\"");
+                    StringBuffer cmdString = new StringBuffer(" -u \""+cmdEscape(url)+"\"");
                     if (referer != null) cmdString.append(" --referer=\""+cmdEscape(referer)+"\"");
                     if (ua != null) cmdString.append(" --user-agent=\""+cmdEscape(ua)+"\"");
                     if (menuItemCaption.toLowerCase().indexOf("sqlmap") >= 0){
